@@ -4,6 +4,7 @@ import sqlite3
 # Specify path to directory holding the databases
 db_folder = Path("databases")
 
+
 # "Home" page
 def home():
 	print("Hello and welcome to my program")
@@ -17,15 +18,19 @@ def home():
 
 	if choose_db == 0:
 		new_db = str(input(print("Enter a name for the database:")))
-		user_db = sqlite3.connect(str(db_folder) + "/" + new_db + ".db")
+		sqlite3.connect(db_folder + "/" + new_db + ".db")
 		print("Successfully created database")
-		return user_db
+		home()
 	else:
 		choose_db -= 1
 		user_db = sqlite3.connect(str(db_folder) + "/" + db_list[choose_db] + ".db")
 		print("Opening " + db_list[choose_db])
-		return user_db
-	return user_db
+	return choose_db
 
-home()
+def nextpage(use_db):
+#	user_db = sqlite.connect(str(db_folder + "/" + choose_db - 1)
+	cursor = user_db.cursor
+	print("connected")
+
+nextpage(home())
 print("DONE")
