@@ -28,7 +28,9 @@ def home():
 	return choose_db
 
 def nextpage(use_db):
-#	user_db = sqlite.connect(str(db_folder + "/" + choose_db - 1)
+	dblist = [file.stem for file in db_folder.rglob("*.db")]
+	use_db -=1
+	user_db = sqlite3.connect(str(db_folder) + "/" + dblist[use_db])
 	cursor = user_db.cursor
 	print("connected")
 
