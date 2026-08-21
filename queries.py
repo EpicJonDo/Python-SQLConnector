@@ -19,7 +19,7 @@ def homepage():
 	choose_db = int(input(">>"))
 
 	if choose_db == 0:
-		new_db = str(input("Enter a name for the database:"))
+		new_db = str(input("Enter a name for the database:\n>>"))
 		sqlite3.connect(str(db_folder) + "/" + new_db + ".db")
 		print("Successfully created database\n")
 	else:
@@ -31,8 +31,8 @@ def homepage():
 def displaydb(use_db):
 	user_db = sqlite3.connect(str(db_folder) + "/" + db_list[use_db - 1] + ".db")
 	cursor = user_db.cursor()
-	cursor.execute("show tables")
-	print(cursor.fetchall)
+	cursor.execute("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';")
+	print(cursor.fetchall())
 	print("done")
 
 displaydb(homepage())
