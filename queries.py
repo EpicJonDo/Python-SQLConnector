@@ -33,7 +33,29 @@ def displaydb(use_db):
 	cursor = user_db.cursor()
 	cursor.execute("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';")
 	print(cursor.fetchall())
-	print("done")
+	print("Choose a table, or enter 0 to add a new table:\n")
+	choose_table = int(input(">>"))
+
+	if choose_table == 0:
+		new_table = str(input("ID column will be made by defult. Enter a name for the new table: "))
+		columns = int(input("How many more columns would you like to add?: "))
+		print("Making table...")
+		make_table = f"CREATE TABLE IF NOT EXISTS {new_table} (id INTEGER);"
+		cursor.execute(make_table)
+		for i in range(columns):
+			column_name = str(input("Enter column name: "))
+			column_type = str(input("Enter column datatype: "))
+			makecolumn(new_table, column_name, column_type)
+	else:
+		pass
+
+	print("Successfully added table!")
+
+def makecolumn(table, name, value):
+	print("Adding column...")
+	cursor.execute(f"ALTER TABLE {table} ADD COLUMN {name} {value};")
+	cursor.commit()
+	print("Added Column")
 
 displaydb(homepage())
 print("DONE")
