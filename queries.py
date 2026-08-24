@@ -9,27 +9,21 @@ db_list = [file.stem for file in db_folder.rglob("*.db")]
 
 # "Home" page, prints databases from path
 # Then asks the user to choose one (or create a new ono)
-def homepage():
-	print("Hello and welcome to my program")
-	print("Choose a database to use by entering the number associated with it, or enter 0 to add a new database:")
-
+def showdbs():
 	for index, db in enumerate(db_list, start=1):
 		print(f"({index}) {db}")
 
-	choose_db = int(input(">>"))
+def createdb(new_db):
+	sqlite3.connect(str(db_folder) + "/" + new_db + ".db")
+	print("Successfully created database\n")
 
-	if choose_db == 0:
-		new_db = str(input("Enter a name for the database:\n>>"))
-		sqlite3.connect(str(db_folder) + "/" + new_db + ".db")
-		print("Successfully created database\n")
-	else:
-		user_db = sqlite3.connect(str(db_folder) + "/" + db_list[choose_db - 1] + ".db")
-		print("Opening " + db_list[choose_db - 1])
-	return choose_db
+def connectdb(choose_db):
+	user_db = sqlite3.connect(str(db_folder) + "/" + db_list[choose_db - 1] + ".db")
+	print("Opening " + db_list[choose_db - 1])
+	displaydb(user_db)
 
 # Prints all tables from Database
-def displaydb(use_db):
-	user_db = sqlite3.connect(str(db_folder) + "/" + db_list[use_db - 1] + ".db")
+def displaydb(user_db):
 	cursor = user_db.cursor()
 	cursor.execute("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';")
 	print(cursor.fetchall())
@@ -57,5 +51,13 @@ def makecolumn(table, name, value):
 	cursor.commit()
 	print("Added Column")
 
-displaydb(homepage())
-print("DONE")
+print("Hello and welcome to my program")
+print("Choose a database to use by entering the number associated with it, or enter 0 to add a new database:")
+showdbs()
+
+db = int(input(">>"))
+
+if db == 0:
+	createdb(str(input("Enter a name for the new database:\n>>")))
+else:
+	connectdb(db)
