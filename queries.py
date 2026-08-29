@@ -2,10 +2,11 @@ from pathlib import Path
 import sqlite3
 
 # Specify path to directory holding the databases
-db_folder = Path("databases")
-
-# Global Variables
-db_list = [file.stem for file in db_folder.rglob("*.db")]
+db_path = "databases"
+def dbpath()
+	db_folder = Path(db_path)
+	db_list = [file.stem for file in db_folder.rglob("*.db")]
+	return db_list
 
 # "Home" page, prints databases from path
 # Then asks the user to choose one (or create a new ono)
@@ -23,33 +24,33 @@ def connectdb(choose_db):
 	displaydb(user_db)
 
 # Prints all tables from Database
-def displaydb(user_db):
+def displaytables(user_db):
 	cursor = user_db.cursor()
 	cursor.execute("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';")
 	print(cursor.fetchall())
-	print("Choose a table, or enter 0 to add a new table:\n")
-	choose_table = int(input(">>"))
 
-	if choose_table == 0:
-		new_table = str(input("ID column will be made by defult. Enter a name for the new table: "))
-		columns = int(input("How many more columns would you like to add?: "))
-		print("Making table...")
-		make_table = f"CREATE TABLE IF NOT EXISTS {new_table} (id INTEGER);"
-		cursor.execute(make_table)
-		for i in range(columns):
-			column_name = str(input("Enter column name: "))
-			column_type = str(input("Enter column datatype: "))
-			makecolumn(new_table, column_name, column_type)
-	else:
-		pass
+def displayinfo(table)
+	cursor.execute("SELECT * FROM {table}")
+	table_info = cursor.fetchall()
+	return table_info
 
-	print("Successfully added table!")
+def maketable(new_table):
+	print("Making Table...")
+	cursor.execute(f"CREATE TABLE IF NOT EXISTS {new_table} (id INTEGER);")
+	cursor.commit
+	print("Made Table")
 
 def makecolumn(table, name, value):
 	print("Adding column...")
 	cursor.execute(f"ALTER TABLE {table} ADD COLUMN {name} {value};")
 	cursor.commit()
 	print("Added Column")
+
+def deletecolumn(table, column):
+	print("Deleting Column...")
+	cursor.execute(f"ALTER TABLE {table} DROP COLUMN {column};")
+	cursor.commit()
+	print("Deleted Column")
 
 print("Hello and welcome to my program")
 print("Choose a database to use by entering the number associated with it, or enter 0 to add a new database:")
